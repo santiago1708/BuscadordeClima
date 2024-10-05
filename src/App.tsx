@@ -1,8 +1,15 @@
+import styles from './App.module.css'
+import Form from './component/forms/Form'
+
 function App() {
 
   return (
     <>
-      <h1 className="bg-red-700">HLA MUNDO</h1>
+      <h1 className={styles.title}>Buscador de clima</h1>
+      <div className={styles.container}>
+          <Form />
+          <p>2</p>
+      </div>
     </>
   )
 }
