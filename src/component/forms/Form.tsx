@@ -4,7 +4,12 @@ import { countries } from "../../data/countries";
 import styles from './Form.module.css'
 import Alert from "../alert/Alert";
 
-export default function Form() {
+
+type FormProps = {
+    fetchWeather: (search: SearchType) => Promise<void>
+}
+
+export default function Form({fetchWeather} : FormProps) {
 
     const [alert, setAlert] = useState('')
 
@@ -27,13 +32,15 @@ export default function Form() {
             setAlert('los valores son obligatorios')
             return
         }
+
+        fetchWeather(search)
     }
 
     return (
         <form className={styles.form}
             onSubmit={handleSubmit}
         >
-            {alert && <Alert>{alert}</Alert> }
+            {alert && <Alert >{alert}</Alert> }
             <div className={styles.field}>
                 <label htmlFor="city">Ciudad: </label>
                 <input 
@@ -50,7 +57,7 @@ export default function Form() {
             <div className={styles.field}>
                 <label htmlFor="country">Pais: </label>
                 <select
-                    id="countryf"
+                    id="country"
                     value={search.country}
                     name="country"
                     onChange={handleChange}
