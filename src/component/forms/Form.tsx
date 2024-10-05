@@ -1,22 +1,60 @@
+import { ChangeEvent, FormEvent, useState } from "react";
+import type { SearchType } from "../../types";
 import { countries } from "../../data/countries";
 import styles from './Form.module.css'
+import Alert from "../alert/Alert";
 
-export default function form() {
+export default function Form() {
+
+    const [alert, setAlert] = useState('')
+
+    const [search, setSearch] = useState<SearchType>({
+        city: '',
+        country: ''
+    })
+
+    const handleChange  = (e : ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLSelectElement>)  => {
+        setSearch({
+            ...search, 
+            [e.target.name] : e.target.value
+        })
+    }
+
+    const handleSubmit = (e : FormEvent<HTMLFormElement>) => {
+        e.preventDefault()
+
+        if(Object.values(search).includes('')){
+            setAlert('los valores son obligatorios')
+            return
+        }
+    }
+
     return (
-        <form className={styles.form}>
-
+        <form className={styles.form}
+            onSubmit={handleSubmit}
+        >
+            {alert && <Alert>{alert}</Alert> }
             <div className={styles.field}>
                 <label htmlFor="city">Ciudad: </label>
                 <input 
                     type="text" 
                     name="city" 
                     id="city" 
-                    placeholder="Ciudad" />
+                    placeholder="Ciudad" 
+                    value={search.city}
+                    onChange={handleChange}
+                    />
+                    
             </div>
 
-            <div>
+            <div className={styles.field}>
                 <label htmlFor="country">Pais: </label>
-                <select>
+                <select
+                    id="countryf"
+                    value={search.country}
+                    name="country"
+                    onChange={handleChange}
+                >
                     <option value="">--- Seleccione un Pais ---</option>
                     {countries.map(country => (
                         <option 
@@ -28,7 +66,7 @@ export default function form() {
                 </select>
             </div>
 
-            <input type="submit" value='Consultar Clima' />
+            <input className={styles.submit} type="submit" value='Consultar Clima' />
         </form>
     )
 }
