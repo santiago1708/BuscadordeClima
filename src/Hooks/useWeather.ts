@@ -26,8 +26,8 @@ const INITIALSTATE = {
 export default function useWeather() {
 
     const [weather, setWeather] = useState(INITIALSTATE)
-
     const [loading, setLoading] = useState(false)
+    const [noFound, setNoFound] = useState(false)
 
     const fetchWeather = async (search: SearchType) => {
 
@@ -35,10 +35,16 @@ export default function useWeather() {
 
         setLoading(true)
         setWeather(INITIALSTATE)
+        setNoFound(false)
         try {
-            const geoUrl = `http://api.openweathermap.org/geo/1.0/direct?q=${search.city},${search.country}&&appid=${appId}` //primer llamado para la latitud y longitud
+            const geoUrl = `https://api.openweathermap.org/geo/1.0/direct?q=${search.city},${search.country}&&appid=${appId}` //primer llamado para la latitud y longitud
 
             const { data } = await axios(geoUrl) //por default es get
+
+            if(!data[0]){ //Validar que si encuentre la ciudad 
+                setNoFound(true)
+                return
+            }
             const lat = data[0].lat
             const lon = data[0].lon
 
@@ -65,6 +71,7 @@ export default function useWeather() {
     return {
         weather,
         loading,
+        noFound,
         fetchWeather,
         hasWeatherData
     }
